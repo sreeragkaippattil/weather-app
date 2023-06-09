@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <!-- external css -->
+    <link rel="stylesheet" href="style.css">
+    <!-- bootstrap link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+<body  >
+   <div class="container ">
+    <div class="row">
+        <h1>WEATHER</h1>
+        <div class="weather_side col-4  d-flex align-items-end flex-column">
+            <div class="search border border-dark border-5 rounded d-flex flex-column border-dark mt-5 w-75 me-5 ">
+                <input class="p-2 w-75 m-1" type="text" id="input" placeholder="Enter Your city">
+                <button onclick="search()" type="button" class="btn btn-dark w-25 mt-2 m-2">search</button>
+            </div>
+            <div class="weather_caption  mt-auto" id="result">
+               
+            </div>
+        </div>
+        <div class="weather_details  col-4 "> </div>
+            <div class="weather_details col-4 " id="Details">
+               
+            </div>
+       
+    </div>
+   </div>
+</body>
+<script>
+  async  function search(){
+        var SearchCity=input.value
+      const data=await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${SearchCity}&appid=8ac5c4d57ba6a4b3dfcf622700447b1e`)
+      data.json().then(
+        output=>display(output)
+      )
+    }
+function display(output){
+    let WeatherDetails=output
+    let temp=((WeatherDetails['main']['temp'])-273).toFixed(2)
+    let feels_like=((WeatherDetails['main']['feels_like'])-273).toFixed(2)
+    let place=WeatherDetails['name']
+    const d = new Date();
+    let icon=WeatherDetails['weather']['icon']
+    let country=WeatherDetails['sys']['country']
+    let humidity=WeatherDetails['main']['humidity']
+    let wind=WeatherDetails['wind']['speed']
+    let pressure=WeatherDetails['main']['pressure']
+    console.log(pressure);
+
+let html_data=`
+                <h1>${temp}<span>&#176;</span></h1>
+                <h5>feels like ${feels_like}<span>&#176;</span></h5>
+                <h2>${place}</h2>
+                <p>${d}</p>
+`
+html_Weatherdetails=`
+<div class="card p-4 text-bg-dark" style="width: 26rem;">
+                    <ul class="list-group list-group-flush ">
+                      <li class="list-group-item text-bg-secondary"><h1 class="text-warning">${place}</h1></li><br>
+                      <li class="list-group-item text-bg-secondary "><h4 class="text-dark">Weather Details</h4></li><br>
+                      <li class="list-group-item text-bg-secondary text-dark"><h5>Humidity: <span class=" text-light">${humidity}%</span></h5></li><br>
+                      <li class="list-group-item text-bg-secondary "><h5> Wind: <span class=" text-light">${wind}kmph </span></h5></li><br>
+                      <li class="list-group-item text-bg-secondary"><h5>Pressure: <span class=" text-light">${pressure}  </span></h5></li><br>
+                      
+                     
+                    </ul>
+                  </div>
+`
+result.innerHTML=html_data
+Details.innerHTML=html_Weatherdetails
+}
+</script>
+<!-- bootstrap script -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</html>
